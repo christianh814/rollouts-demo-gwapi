@@ -11,8 +11,12 @@ const BUCKET_SECONDS = 5;
 
 const COLORS = ["red", "orange", "yellow", "green", "blue", "purple"];
 
+const CANARY_USERS = ["qateam", "qa-team"];
+const USER_KEY = "rollouts-demo-user";
+
 class App {
 	constructor() {
+		this.auth = new Auth();
 		this.colors = new Colors();
 		this.interval = null;
 
@@ -84,6 +88,7 @@ class App {
 	load(body) {
 	    fetch('./color', {
 	        method: "POST",
+	        headers: this.auth.header(),
 	        body: this.req(),
 	    })
 	    .then(function(res) {
@@ -112,6 +117,53 @@ class App {
 		rows = Math.min(rows, MAX_ROWS);
 		rows = Math.max(rows, MIN_ROWS);
 		return rows;
+	}
+}
+
+class Auth {
+	constructor() {
+		this.user = localStorage.getItem(USER_KEY);
+		this.loginButton = document.querySelector("div.button--login");
+		this.logoutButton = document.querySelector(".button--logout");
+		this.form = document.getElementById("login-form");
+
+		this.loginButton.addEventListener("click", () => {
+			this.loginButton.hidden = true;
+			this.form.hidden = false;
+		});
+		this.form.addEventListener("submit", e => {
+			e.preventDefault();
+			this.login(document.getElementById("login-user").value.trim());
+		});
+		this.logoutButton.addEventListener("click", this.logout.bind(this));
+		this.render();
+	}
+
+	login(user) {
+		this.user = user;
+		localStorage.setItem(USER_KEY, user);
+		this.form.reset();
+		this.render();
+	}
+
+	logout() {
+		this.user = null;
+		localStorage.removeItem(USER_KEY);
+		this.render();
+	}
+
+	header() {
+		if (!this.user) {
+			return {};
+		}
+		return {"X-Canary": String(CANARY_USERS.includes(this.user))};
+	}
+
+	render() {
+		this.loginButton.hidden = !!this.user;
+		this.form.hidden = true;
+		this.logoutButton.hidden = !this.user;
+		this.logoutButton.textContent = `LOGOUT (${this.user})`;
 	}
 }
 

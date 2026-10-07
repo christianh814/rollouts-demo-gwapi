@@ -83,6 +83,26 @@ h1 {
     background-color: $orange;
     margin-right: 7px;
   }
+
+  &--login {
+    background-color: $blue;
+    border: none;
+    font: inherit;
+  }
+
+  &--logout {
+    background-color: $red;
+  }
+}
+
+.login-form input {
+  font: inherit;
+  width: 90px;
+  margin-right: 5px;
+  padding: 8px;
+  color: white;
+  background-color: #272727;
+  border: none;
 }
 
 .orange {

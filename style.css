@@ -69,6 +69,24 @@ h1 {
   background-color: #FB823D;
   margin-right: 7px;
 }
+.button--login {
+  background-color: #0B9AFF;
+  border: none;
+  font: inherit;
+}
+.button--logout {
+  background-color: #FB3D3D;
+}
+
+.login-form input {
+  font: inherit;
+  width: 90px;
+  margin-right: 5px;
+  padding: 8px;
+  color: white;
+  background-color: #272727;
+  border: none;
+}
 
 .orange {
   color: #ff823c;
