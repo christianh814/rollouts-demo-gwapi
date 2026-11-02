@@ -1,7 +1,11 @@
-FROM golang:1.27 AS build
+# Build natively on the host platform and cross-compile for the target so
+# multi-arch builds (e.g. linux/arm64 for Apple Silicon) don't require QEMU.
+FROM --platform=$BUILDPLATFORM golang:1.27 AS build
+ARG TARGETOS
+ARG TARGETARCH
 WORKDIR /go/src/app
 COPY . .
-RUN make
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} make
 
 FROM scratch
 COPY *.html ./
